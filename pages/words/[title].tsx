@@ -39,15 +39,10 @@ const StaticPropsDetail = ({ item, errors }: Props) => {
 export default StaticPropsDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const result = await repos.issues.listForRepo(TARGET_REPOSITORY);
-  // Get the paths we want to pre-render based on users
-  const paths = result.data.map(issue => ({
-    params: { title: issue.title },
-  }))
-
-  // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
-  return { paths, fallback: false }
+  return {
+    paths: [],
+    fallback: true
+  }
 }
 
 // This function gets called at build time on server-side.
@@ -60,7 +55,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const item = result.data.find((issue) => issue.title === title)
     // By returning { props: item }, the StaticPropsDetail component
     // will receive `item` as a prop at build time
-    return { props: { item } }
+    return {
+      props: {
+        item
+      },
+      // sec
+      revalidate: 5 * 60,
+    }
   } catch (err) {
     return { props: { errors: err.message } }
   }

@@ -33,9 +33,13 @@ export const getStaticProps: GetStaticProps = async () => {
   try {
     const result = await repos.issues.listForRepo(TARGET_REPOSITORY);
     const items: Word[] = result.data
-    // By returning { props: item }, the StaticPropsDetail component
-    // will receive `item` as a prop at build time
-    return { props: { items } }
+    return {
+      props: {
+        items
+      },
+      // sec
+      revalidate: 5 * 60,
+    }
   } catch (err) {
     return { props: { errors: err.message } }
   }
