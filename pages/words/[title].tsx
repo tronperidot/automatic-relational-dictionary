@@ -56,8 +56,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const result = await repos.issues.listForRepo(TARGET_REPOSITORY);
-    const id = params?.id
-    const item = result.data.find((issue) => issue.title === id)
+    const title = params?.title
+    const item = result.data.find((issue) => issue.title === title)
     // By returning { props: item }, the StaticPropsDetail component
     // will receive `item` as a prop at build time
     return { props: { item } }
